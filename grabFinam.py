@@ -7,6 +7,16 @@ Perov Vitaly 2020
 https://habr.com/ru/post/332700/
 """
 import urllib
+import csv
+import time
+
+def readSettings(filename):
+    quotesList = []
+    with open(filename, 'r') as csvfile:
+        rows = csv.reader(csvfile, delimiter=',', quotechar='|')
+        for row in rows:
+            quotesList.append(row)
+    return quotesList
 
 def quotes(code,year_start,month_start,day_start,year_end,month_end,day_end,e,market,em,df,mf,yf,dt,mt,yt,p,dtf,tmf,MSOR,mstimever,sep,sep2,datf,at):
     
@@ -48,9 +58,11 @@ def getLastYearQuotes(name, quoteId):
     qq = quotes(code,year_start,month_start,day_start,year_end,month_end,day_end,e,market,em,df,mf,yf,dt,mt,yt,p,dtf,tmf,MSOR,mstimever,sep,sep2,datf,at)
 
 
+quotesList = readSettings("historySettings.txt")
+for quote in quotesList:
+    [name, quoteId] = quote
+    print("Grabbing " + name + " history...")
+    getLastYearQuotes(name, quoteId)
+    time.sleep(1)
 
-name = "NOK"
-quoteId = '874609'
-print("Grabbing " + name + " history...")
-getLastYearQuotes(name, quoteId)
 print("Done")
