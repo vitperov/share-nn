@@ -4,7 +4,11 @@ Created on Sat Jun 24 01:46:38 2017
 
 @author: optimusqp 2017
 Perov Vitaly 2020
+
 https://habr.com/ru/post/332700/
+
+grab from page:
+https://www.finam.ru/profile/akcii-usa-bats/microsoft-corp/export/?market=25&em=19068&code=MSFT&apply=0&df=7&mf=1&yf=2019&from=07.02.2019&dt=7&mt=1&yt=2020&to=07.02.2020&p=8&f=MSFT_190207_200207&e=.txt&cn=MSFT&dtf=1&tmf=1&MSOR=1&mstimever=0&sep=1&sep2=1&datf=1&at=1&fsp=1
 """
 import urllib
 import csv
@@ -44,7 +48,7 @@ def getLastYearQuotes(name, quoteId):
     MSOR='1';
     mstimever='0'
     sep='1';
-    sep2='3';
+    sep2='1';
     datf='1';
     at='1';
 
