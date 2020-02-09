@@ -52,14 +52,14 @@ for name in quotesList:
     if Xall is None:
         Xall = X
     else:
-        Xall = numpy.append(Xall, X)
+        Xall = numpy.append(Xall, X, axis=0)
         
     if Yall is None:
         Yall = Y
     else:
-        Yall = numpy.append(Yall, Y)
+        Yall = numpy.append(Yall, Y, axis=0)
 
-print("Got ", len(Xall), " points for learning")
+print("Got ", Xall.shape, " points for learning")
 
 datasets = dict()
 datasets['X'] = Xall
