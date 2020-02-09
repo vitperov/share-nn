@@ -1,6 +1,6 @@
 # userSettings
-history/
-settings/
+settings/historySettings.txt
+settings/teachSettings.ini
 
 
 # Byte-compiled / optimized / DLL files

@@ -24,7 +24,7 @@ def scaleInputData(X, Y):
     return [Xout, Yout]
 
 datasets = dict()
-datasets = numpy.load("predictNdaysToLearn.npy", allow_pickle=True)[()]
+datasets = numpy.load("binaryData/predictNdaysToLearn.npy", allow_pickle=True)[()]
 
 X = datasets['X']
 Y = datasets['Y']
@@ -46,7 +46,7 @@ scores = model.evaluate(Xout, Yout)
 print("\n%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
 
 #save model
-outFile="predictNdaysToLearn"
+outFile="binaryData/predictNdaysToLearn"
 json_string = model.to_json()
 text_file = open(outFile+".mod", "w")
 text_file.write(json_string)

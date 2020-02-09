@@ -65,7 +65,7 @@ print("Got ", Xall.shape, " points for learning")
 datasets = dict()
 datasets['X'] = Xall
 datasets['Y'] = Yall
-numpy.save("predictNdaysToLearn.npy", datasets)
+numpy.save("binaryData/predictNdaysToLearn.npy", datasets)
 
 #save to Matlab
-scipy.io.savemat("predictNdaysToLearn.mat", datasets)
+scipy.io.savemat("binaryData/predictNdaysToLearn.mat", datasets)
