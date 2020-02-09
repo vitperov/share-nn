@@ -3,6 +3,7 @@
 import configparser
 import csv
 import numpy
+import scipy.io
 
 def getQuoteAllData(name):
     rawData = []
@@ -65,3 +66,6 @@ datasets = dict()
 datasets['X'] = Xall
 datasets['Y'] = Yall
 numpy.save("predictNdaysToLearn.npy", datasets)
+
+#save to Matlab
+scipy.io.savemat("predictNdaysToLearn.mat", datasets)
