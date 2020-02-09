@@ -15,7 +15,6 @@ def getQuoteAllData(name):
             filtered = filtered[4:]
             rawData.append(filtered)
     cleanData = numpy.array(rawData, dtype='f')
-    print("array=", cleanData)
     return cleanData
 
 def prepareNDaysPredictorData(allData, window, daysForward):
@@ -24,8 +23,6 @@ def prepareNDaysPredictorData(allData, window, daysForward):
     
     maxBlockSize = window + daysForward
     N = len(allData) - maxBlockSize
-    
-    print("allData=", len(allData), "; N=", N)
     
     for i in range(N):
         matrix = allData[i:i+window]
@@ -47,8 +44,24 @@ predictdaysForward = int(config['predictNdays']['daysForward'])
 
 print("List=", quotesList)
 
-allData = getQuoteAllData(quotesList[0])
-[X, Y] = prepareNDaysPredictorData(allData, predictWindow, predictdaysForward)
+Xall = None
+Yall = None
+for name in quotesList:
+    allData = getQuoteAllData(name)
+    [X, Y] = prepareNDaysPredictorData(allData, predictWindow, predictdaysForward)
+    if Xall is None:
+        Xall = X
+    else:
+        Xall = numpy.append(Xall, X)
+        
+    if Yall is None:
+        Yall = Y
+    else:
+        Yall = numpy.append(Yall, Y)
 
-#print("X=", X)
-#print("Y=", Y)
+print("Got ", len(Xall), " points for learning")
+
+datasets = dict()
+datasets['X'] = Xall
+datasets['Y'] = Yall
+numpy.save("predictNdaysToLearn.npy", datasets)
