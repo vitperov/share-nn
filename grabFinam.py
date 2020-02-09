@@ -37,7 +37,7 @@ def getLastYearQuotes(name, quoteId):
     em=quoteId;
     e='.txt';
     p='8';
-    yf='2019';
+    yf='2017';
     yt='2020';
     month_start='02';
     day_start='07';

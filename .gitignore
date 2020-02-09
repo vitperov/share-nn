@@ -1,6 +1,7 @@
 # userSettings
 historySettings.txt
 teachSettings.ini
+predictNdaysToLearn.npy
 history/
 
 
