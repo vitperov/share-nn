@@ -33,7 +33,7 @@ def prepareNDaysPredictorData(allData, window, daysForward):
         Y.append(dayClosePrice)
     return [numpy.array(X), numpy.array(Y)]
     
-configFile = "teachSettings.ini"
+configFile = "settings/teachSettings.ini"
 
 config = configparser.ConfigParser()
 config.read(configFile)

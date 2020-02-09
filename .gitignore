@@ -1,8 +1,6 @@
 # userSettings
-historySettings.txt
-teachSettings.ini
-predictNdaysToLearn.npy
 history/
+settings/
 
 
 # Byte-compiled / optimized / DLL files

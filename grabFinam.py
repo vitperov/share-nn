@@ -62,7 +62,7 @@ def getLastYearQuotes(name, quoteId):
     qq = quotes(code,year_start,month_start,day_start,year_end,month_end,day_end,e,market,em,df,mf,yf,dt,mt,yt,p,dtf,tmf,MSOR,mstimever,sep,sep2,datf,at)
 
 
-quotesList = readSettings("historySettings.txt")
+quotesList = readSettings("settings/historySettings.txt")
 for quote in quotesList:
     [name, quoteId] = quote
     print("Grabbing " + name + " history...")
