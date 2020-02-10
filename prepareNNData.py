@@ -4,19 +4,7 @@ import configparser
 import csv
 import numpy
 import scipy.io
-
-def getQuoteAllData(name):
-    rawData = []
-    with open("history/"+name+".txt", 'r') as csvfile:
-        rows = csv.reader(csvfile, delimiter=',')
-        for row in rows:
-            if "TICKER" in row[0]:
-                continue
-            filtered = numpy.array(row)
-            filtered = filtered[4:]
-            rawData.append(filtered)
-    cleanData = numpy.array(rawData, dtype='f')
-    return cleanData
+from common import *
 
 def prepareNDaysPredictorData(allData, window, daysForward):
     X = []

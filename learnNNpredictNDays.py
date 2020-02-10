@@ -27,10 +27,10 @@ def simpleWithVolumeInputData(X, Y):
         percentRow=[]
         lastDayClose = 0
         for day in range(1,days):
-            #prevDayOpen = X[i, day*numbersPerDay + openPriceIdx - 1]
-            #curDayOpen = X[i, day*numbersPerDay + openPriceIdx]
-            #openPercent = (curDayOpen - prevDayOpen) / prevDayOpen
-            #row.append(openPercent)
+            prevDayOpen = X[i, day*numbersPerDay + openPriceIdx - 1]
+            curDayOpen = X[i, day*numbersPerDay + openPriceIdx]
+            openPercent = (curDayOpen - prevDayOpen) / prevDayOpen
+            row.append(openPercent)
             
             prevDayClose = X[i, day*numbersPerDay + closePriceIdx - 1]
             curDayClose = X[i, day*numbersPerDay + closePriceIdx]
