@@ -8,39 +8,82 @@ from keras.models import model_from_json
 from tensorflow.python.client import device_lib
 from keras import backend as K
 
-def scaleInputData(X, Y):
-    Xout = numpy.copy(X)
+def simpleWithVolumeInputData(X, Y):
+    Xout = []
     Yout = numpy.copy(Y)
     
-    print("x=", len(X), "; Y=", len(Y))
+    numbersPerDay = 5
+    days = int(len(X[0]) / numbersPerDay)
+    openPriceIdx = 0
+    minPriceIdx = 1
+    maxPriceIdx = 2
+    closePriceIdx = 3
+    volumeIdx = 4
     
-    for i in range(len(Xout)):
-        maxX = numpy.max(Xout[i])
-        maxValue = max(maxX, Yout[i])
-        
-        Xout[i] = Xout[i] / maxValue
-        Yout[i] = Yout[i] / maxValue
-        
-    return [Xout, Yout]
+    maxVolume = 500e6
+    
+    for i in range(len(X)):
+        row = []
+        percentRow=[]
+        lastDayClose = 0
+        for day in range(1,days):
+            #prevDayOpen = X[i, day*numbersPerDay + openPriceIdx - 1]
+            #curDayOpen = X[i, day*numbersPerDay + openPriceIdx]
+            #openPercent = (curDayOpen - prevDayOpen) / prevDayOpen
+            #row.append(openPercent)
+            
+            prevDayClose = X[i, day*numbersPerDay + closePriceIdx - 1]
+            curDayClose = X[i, day*numbersPerDay + closePriceIdx]
+            lastDayClose = curDayClose
+            percent = (curDayClose - prevDayClose) / prevDayClose
+            row.append(percent)
+            
+            curDayMin = X[i, day*numbersPerDay + minPriceIdx]
+            curDayMax = X[i, day*numbersPerDay + maxPriceIdx]
+            dmin = abs(curDayMin-curDayClose)
+            dmax = abs(curDayMax-curDayClose)
+            maxD = max(dmin, dmax)
+            row.append(maxD/curDayClose)
+            
+            volume = X[i, day*numbersPerDay + volumeIdx]
+            volume = volume / maxVolume
+            row.append(volume)
 
+        Yout[i] = (Y[i] - lastDayClose) / lastDayClose
+
+        Xout.append(numpy.array(row))
+        
+    return [numpy.array(Xout), Yout]
+    
 datasets = dict()
 datasets = numpy.load("binaryData/predictNdaysToLearn.npy", allow_pickle=True)[()]
 
 X = datasets['X']
 Y = datasets['Y']
 
-#[Xout, Yout] = scaleInputData(X, Y)
-[Xout, Yout] = [X, Y]
+#[Xout, Yout] = simplifyInputData(X, Y)
+#[Xout, Yout] = inputDataCalcPercent(Xout, Yout)
 
-firstLayerInputs = X.shape[1]
+[Xout, Yout] = simpleWithVolumeInputData(X, Y)
+
+#Xout[:,1:49] = 0
+
+print("Xout=", Xout)
+print("Shape=", Xout.shape)
+print("Yout=", Yout)
+
+#exit(0)
+
+firstLayerInputs = Xout.shape[1]
 
 model = Sequential()
-model.add(Dense(firstLayerInputs, input_dim=firstLayerInputs, activation='linear'))
-model.add(Dense(50, activation='sigmoid'))
-model.add(Dense(1, activation='sigmoid'))
+model.add(Dense(firstLayerInputs, input_dim=firstLayerInputs, activation='tanh'))
+model.add(Dense(15, activation='linear'))
+#model.add(Dense(3, activation='linear'))
+model.add(Dense(1, activation='tanh'))
 
-model.compile(loss="mean_squared_error", optimizer="RMSprop", metrics=['accuracy'])
-model.fit(Xout, Yout, epochs = 200, batch_size=30)
+model.compile(loss="mean_squared_error", optimizer="Adagrad", metrics=['accuracy'])
+model.fit(Xout, Yout, epochs = 1000, batch_size=50)
 
 scores = model.evaluate(Xout, Yout)
 print("\n%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
