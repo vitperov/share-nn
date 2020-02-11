@@ -57,3 +57,31 @@ numpy.save("binaryData/predictNdaysToLearn.npy", datasets)
 
 #save to Matlab
 scipy.io.savemat("binaryData/predictNdaysToLearn.mat", datasets)
+
+
+testQuotes = config['default']['testQuotes']
+testQuotesList = testQuotes.split()
+Xall = None
+Yall = None
+for name in testQuotesList:
+    allData = getQuoteAllData(name)
+    [X, Y] = prepareNDaysPredictorData(allData, predictWindow, predictdaysForward)
+    if Xall is None:
+        Xall = X
+    else:
+        Xall = numpy.append(Xall, X, axis=0)
+        
+    if Yall is None:
+        Yall = Y
+    else:
+        Yall = numpy.append(Yall, Y, axis=0)
+
+print("Got ", Xall.shape, " points for testing")
+
+datasets = dict()
+datasets['X'] = Xall
+datasets['Y'] = Yall
+numpy.save("binaryData/testNdaysToLearn.npy", datasets)
+
+#save to Matlab
+scipy.io.savemat("binaryData/testNdaysToLearn.mat", datasets)

@@ -88,6 +88,8 @@ model.fit(Xout, Yout, epochs = 1000, batch_size=50)
 scores = model.evaluate(Xout, Yout)
 print("\n%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
 
+
+print("Saving model...")
 #save model
 outFile="binaryData/predictNdaysToLearn"
 json_string = model.to_json()
@@ -96,3 +98,25 @@ text_file.write(json_string)
 text_file.close()
 
 model.save_weights(outFile+".ntw")
+
+print("Evaluating test set...")
+
+atasets = dict()
+datasets = numpy.load("binaryData/predictNdaysToLearn.npy", allow_pickle=True)[()]
+
+X = datasets['X']
+Y = datasets['Y']
+
+[Xout, Yout] = simpleWithVolumeInputData(X, Y)
+
+yToTest = model.predict(Xout)
+yToTest = numpy.array(yToTest.transpose()[0], dtype="float_")
+
+xLastDayClosePrice = X[:,-2]
+yRestored = xLastDayClosePrice * (1+yToTest)
+relativeError = (Y-yRestored)/Y
+avgError = numpy.sum(numpy.abs(relativeError)) / len(Y) * 100
+
+print("test=", yRestored)
+print("relativeError=", relativeError)
+print("avgError=", avgError, "%")

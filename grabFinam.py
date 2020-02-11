@@ -42,7 +42,7 @@ def getLastYearQuotes(name, quoteId):
     month_start='02';
     day_start='07';
     month_end='02';
-    day_end='07';
+    day_end='11';
     dtf='1';
     tmf='1';
     MSOR='1';
