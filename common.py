@@ -15,3 +15,8 @@ def getQuoteAllData(name):
             rawData.append(filtered)
     cleanData = numpy.array(rawData, dtype='f')
     return cleanData
+    
+class Quote:
+    def __init__(self, name):
+        self.name = name
+        self.allData = getQuoteAllData(name)

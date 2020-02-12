@@ -112,6 +112,8 @@ Y = datasets['Y']
 yToTest = model.predict(Xout)
 yToTest = numpy.array(yToTest.transpose()[0], dtype="float_")
 
+print("yToTest=", yToTest)
+
 xLastDayClosePrice = X[:,-2]
 yRestored = xLastDayClosePrice * (1+yToTest)
 relativeError = (Y-yRestored)/Y
