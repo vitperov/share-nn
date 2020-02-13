@@ -13,6 +13,36 @@ https://www.finam.ru/profile/akcii-usa-bats/microsoft-corp/export/?market=25&em=
 import urllib
 import csv
 import time
+import os
+#import urllib.request
+
+def getQuoteIdBuyName(name):
+    dictFile = "binaryData/finamDict.npy"
+    if not os.path.exists(dictFile):
+        finam_symbols = urllib.request.urlopen('http://www.finam.ru/cache/icharts/icharts.js').readlines()
+        str_id = str(finam_symbols[0])
+        str_code = str(finam_symbols[2])
+        
+        start = str(str_code).find("[\'") + 2
+        end = str_code.find("\']")
+        names = str_code[start : end].split('\',\'')
+        ids = str_id[str_id.find('[') + 1 : str_id.find(']')].split(',')
+        quotesDict = dict(zip(names, ids))
+        #print("dict=",quotesDict)
+        #for name in quotesDict:
+        #    print(name, "->", quotesDict[name])
+        print("AAPL id=", quotesDict['AAPL'])
+        
+        symbol = "AAPL"
+        if symbol in names: # Если искомый тикер symbol имеется в списке names.
+            k = 0
+            for i, name in enumerate(names):
+                if name == symbol:
+                    k = i
+                break
+            symbol_code = ids[k]
+            print("code=", symbol_code)
+        
 
 def readSettings(filename):
     quotesList = []
@@ -61,6 +91,9 @@ def getLastYearQuotes(name, quoteId):
 
     qq = quotes(code,year_start,month_start,day_start,year_end,month_end,day_end,e,market,em,df,mf,yf,dt,mt,yt,p,dtf,tmf,MSOR,mstimever,sep,sep2,datf,at)
 
+
+#getQuoteIdBuyName("NOK")
+#exit(0)
 
 quotesList = readSettings("settings/historySettings.txt")
 for quote in quotesList:
