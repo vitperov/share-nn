@@ -11,7 +11,7 @@ config = configparser.ConfigParser()
 config.read(configFile)
 name = config['testGraph']['plotQuote']
 predictWindow = int(config['predictNdays']['windowSize'])
-predictdaysForward = int(config['predictNdays']['daysForward'])
+predictDaysForward = int(config['predictNdays']['daysForward'])
 
 allData = getQuoteAllData(name)
 
@@ -21,7 +21,7 @@ maxPriceIdx = 2
 closePriceIdx = 3
 volumeIdx = 4
 
-sOpen = allData[:,closePriceIdx]
+sOpen = allData[:,openPriceIdx]
 sClose = allData[:,closePriceIdx]
 sMin = allData[:,minPriceIdx]
 sMax = allData[:,maxPriceIdx]
@@ -47,12 +47,13 @@ xPredict=[]
 yPredict=[]
 yNN=[]
 
-predictStep = predictWindow
-predictNumber = int((len(xDays) - predictdaysForward) / predictStep)
+predictStep = 2
+#predictNumber = int((len(xDays) - predictdaysForward - predictWindow) / predictStep)
 
-for i in range(predictNumber):
-    firstDayIdx=i*predictStep
-    lastDayIdx=i*predictStep+predictWindow-1
+for dataIdx in range(predictWindow, len(xDays) - predictDaysForward - predictWindow, predictStep):
+    #print("dataIdx=",dataIdx)
+    firstDayIdx=dataIdx
+    lastDayIdx=dataIdx+predictWindow-1
     
     xData = feedMatrix[firstDayIdx:lastDayIdx, :]
     #print("before flattenin=", xData)
@@ -79,13 +80,13 @@ yPredict = numpy.array(yPredict)
 
 fig = plt.figure()
 sQ = fig.add_subplot(111)
-sNN = fig.add_subplot(212)
+#sNN = fig.add_subplot(212)
 
 sQ.plot(xDays, sClose)
 sQ.plot(xPredict, yPredict)
 #sQ.plot(sMin)
 #sQ.plot(sMax)
 
-sNN.plot(numpy.array(yNN))
+#sNN.plot(numpy.array(yNN))
 
 plt.show()
