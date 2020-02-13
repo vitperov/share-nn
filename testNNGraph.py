@@ -39,6 +39,8 @@ model.load_weights("binaryData/predictNdaysToLearn.ntw")
 openChange = (sOpen[1:] - sOpen[:-1]) / sOpen[:-1]
 closeChange = (sClose[1:] - sClose[:-1]) / sClose[:-1]
 minMaxDelta = (sMax[1:] - sMin[1:]) / sClose[1:]
+#dMin = numpy.abs(sMin[1:] - sClose[1:])
+
 maxVolume = 500e6
 volumeNormalized = volume[1:] / maxVolume
 feedMatrix = numpy.matrix([openChange, closeChange, minMaxDelta, volumeNormalized]).transpose()
@@ -79,14 +81,14 @@ xPredict = numpy.array(xPredict)
 yPredict = numpy.array(yPredict)
 
 fig = plt.figure()
-sQ = fig.add_subplot(111)
-#sNN = fig.add_subplot(212)
+sQ = fig.add_subplot(211)
+sNN = fig.add_subplot(212)
 
 sQ.plot(xDays, sClose)
 sQ.plot(xPredict, yPredict)
 #sQ.plot(sMin)
 #sQ.plot(sMax)
 
-#sNN.plot(numpy.array(yNN))
+sNN.plot(numpy.array(yNN))
 
 plt.show()

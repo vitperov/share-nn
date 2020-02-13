@@ -40,10 +40,12 @@ def simpleWithVolumeInputData(X, Y):
             
             curDayMin = X[i, day*numbersPerDay + minPriceIdx]
             curDayMax = X[i, day*numbersPerDay + maxPriceIdx]
-            dmin = abs(curDayMin-curDayClose)
-            dmax = abs(curDayMax-curDayClose)
-            maxD = max(dmin, dmax)
-            row.append(maxD/curDayClose)
+            #dmin = abs(curDayMin-curDayClose)
+            #dmax = abs(curDayMax-curDayClose)
+            #maxD = max(dmin, dmax)
+            #row.append(maxD/curDayClose)
+            minMaxDelta = (curDayMax - curDayMin) / curDayClose
+            row.append(minMaxDelta)
             
             volume = X[i, day*numbersPerDay + volumeIdx]
             volume = volume / maxVolume
@@ -82,7 +84,8 @@ model.add(Dense(15, activation='linear'))
 #model.add(Dense(3, activation='linear'))
 model.add(Dense(1, activation='tanh'))
 
-model.compile(loss="mean_squared_error", optimizer="Adagrad", metrics=['accuracy'])
+#model.compile(loss="mean_squared_error", optimizer="Adagrad", metrics=['accuracy'])
+model.compile(loss="mean_squared_error", optimizer="rmsprop", metrics=['accuracy'])
 model.fit(Xout, Yout, epochs = 1000, batch_size=50)
 
 scores = model.evaluate(Xout, Yout)
@@ -112,7 +115,7 @@ Y = datasets['Y']
 yToTest = model.predict(Xout)
 yToTest = numpy.array(yToTest.transpose()[0], dtype="float_")
 
-#print("yToTest=", yToTest)
+print("yToTest=", yToTest)
 
 xLastDayClosePrice = X[:,-2]
 yRestored = xLastDayClosePrice * (1+yToTest)
